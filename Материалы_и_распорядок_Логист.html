@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Материалы и распорядок стажировки — Логист · ТД «ЛФБ»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2528;
+    --ink-soft:#5B6669;
+    --teal:#2C7A8C;
+    --teal-dark:#1F5A68;
+    --blue-panel:#DCEEF7;
+    --blue-panel-soft:#EFF7FB;
+    --card-line:#CFE3EC;
+    --gold:#C98A2E;
+    --paper:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px 90px;}
+  h1,h2,h3{font-family:'Playfair Display',serif;margin:0;color:var(--ink);}
+  a{color:var(--teal-dark);}
+
+  .eyebrow{
+    display:inline-block;background:var(--blue-panel);color:var(--teal-dark);
+    font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    padding:5px 12px;border-radius:20px;margin-bottom:16px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:48px 0 8px;}
+  .hero h1{font-size:36px;color:var(--teal);margin-bottom:14px;}
+  .hero p.lead{font-size:16px;color:var(--ink-soft);max-width:640px;}
+
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px;}
+  @media (max-width:600px){.info-grid{grid-template-columns:1fr;}}
+  .info-card{
+    background:var(--blue-panel);border-radius:12px;padding:16px 18px;
+  }
+  .info-card h3{font-size:15px;font-family:'Inter',sans-serif;font-weight:700;margin-bottom:4px;}
+  .info-card p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+
+  /* ---------- section headers ---------- */
+  .section{margin-top:56px;}
+  .section .kicker{
+    font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-dark);
+    margin-bottom:8px;
+  }
+  .section h2{font-size:26px;color:var(--ink);margin-bottom:10px;}
+  .section > p.intro{color:var(--ink-soft);font-size:15px;max-width:680px;margin-bottom:22px;}
+
+  /* ---------- callout ---------- */
+  .callout{
+    background:var(--blue-panel-soft);border-left:4px solid var(--teal);border-radius:8px;
+    padding:14px 18px;font-size:14px;color:var(--ink-soft);margin:18px 0 26px;
+  }
+  .callout b{color:var(--ink);}
+
+  /* ---------- material cards ---------- */
+  .material{
+    border:1px solid var(--card-line);border-radius:12px;padding:16px 18px;margin-bottom:12px;
+    display:flex;gap:14px;
+  }
+  .material .num{
+    flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--teal);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;
+  }
+  .material h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px;}
+  .material .why{font-size:13.5px;color:var(--ink-soft);margin-bottom:8px;}
+  .material .takeaway{font-size:13px;color:var(--teal-dark);font-weight:600;}
+  .material .badge{
+    display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;
+    background:var(--blue-panel);color:var(--teal-dark);padding:2px 8px;border-radius:10px;margin-left:8px;
+    text-transform:uppercase;vertical-align:middle;
+  }
+
+  /* ---------- day blocks ---------- */
+  .day-tag{
+    display:inline-block;background:var(--teal);color:#fff;font-size:12px;font-weight:700;
+    letter-spacing:.05em;text-transform:uppercase;padding:6px 14px;border-radius:20px;margin-bottom:14px;
+  }
+  .day-goal{font-size:14px;color:var(--ink-soft);margin-bottom:22px;font-style:italic;}
+  .timeblock{margin-bottom:26px;}
+  .timeblock h4{
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--teal-dark);margin-bottom:10px;
+  }
+  .item{
+    border-left:3px solid var(--card-line);padding:4px 0 4px 16px;margin-bottom:14px;
+  }
+  .item .item-title{font-weight:700;font-size:14.5px;margin-bottom:3px;}
+  .item .item-desc{font-size:13.5px;color:var(--ink-soft);margin-bottom:5px;}
+  .item .result{font-size:13px;color:var(--ink);}
+  .item .result b{color:var(--teal-dark);}
+  .tag{
+    display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;
+  }
+  .tag.high{background:#FBEFDD;color:var(--gold);}
+  .tag.medium{background:#EAF2E9;color:#4C7A4C;}
+  .tag.quick{background:var(--blue-panel);color:var(--teal-dark);}
+
+  /* ---------- kpi table ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px;}
+  th{
+    background:var(--blue-panel);color:var(--teal-dark);text-align:left;padding:9px 10px;
+    font-size:12px;text-transform:uppercase;letter-spacing:.03em;
+  }
+  td{padding:9px 10px;border-bottom:1px solid var(--card-line);color:var(--ink-soft);}
+  tr:last-child td{border-bottom:none;}
+
+  /* ---------- cta ---------- */
+  .cta{
+    margin-top:50px;background:var(--teal);color:#fff;border-radius:14px;padding:26px 28px;
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  }
+  .cta h3{color:#fff;font-size:19px;margin-bottom:6px;}
+  .cta p{margin:0;color:#DCEEF7;font-size:13.5px;max-width:420px;}
+  .cta a.btn{
+    background:#fff;color:var(--teal-dark);font-weight:700;text-decoration:none;
+    padding:11px 22px;border-radius:24px;font-size:14px;white-space:nowrap;
+  }
+
+  footer{margin-top:50px;font-size:11px;color:#9AA3A6;line-height:1.6;}
+
+  /* ---------- glossary ---------- */
+  .glossary{display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin-top:8px;}
+  @media (max-width:600px){.glossary{grid-template-columns:1fr;}}
+  .term{border-top:1px solid var(--card-line);padding-top:10px;}
+  .term dt{font-family:'Inter',sans-serif;font-weight:700;font-size:14px;color:var(--teal-dark);margin-bottom:3px;}
+  .term dd{margin:0;font-size:13.5px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">ООО ТД «ЛФБ» · ОТДЕЛ ЛОГИСТИКИ</div>
+    <h1>Материалы и распорядок стажировки</h1>
+    <p class="lead">Логист — что изучать в первые 3 дня и как устроен ваш распорядок. Добро пожаловать в команду! Здесь собрано всё, что нужно прочитать и изучить, прежде чем браться за задачи из дорожной карты.</p>
+
+    <div class="info-grid">
+      <div class="info-card"><h3>Стажировка</h3><p>3 дня</p></div>
+      <div class="info-card"><h3>Наставник (МпА)</h3><p>Федина Анна · hrm01@tdlfb.ru</p></div>
+      <div class="info-card"><h3>Подчинение</h3><p>Руководитель отдела логистики</p></div>
+      <div class="info-card"><h3>Проверка знаний</h3><p>HR Visor + тесты на базе Google-скрипта</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="kicker">Справочно</div>
+    <h2>Словарь терминов</h2>
+    <p class="intro">Эти слова и сокращения встречаются в материалах и задачах стажировки. Загляните сюда, если что-то из текста непонятно.</p>
+    <dl class="glossary">
+      <div class="term"><dt>1С</dt><dd>Учётная система компании: заказы, реализации, справочник клиентов.</dd></div>
+      <div class="term"><dt>ГСМ</dt><dd>Горюче-смазочные материалы — расходы на топливо и масла, часть себестоимости рейса.</dd></div>
+      <div class="term"><dt>ГПХ</dt><dd>Гражданско-правовой характер — формат договора на день стажировки (не трудовой договор).</dd></div>
+      <div class="term"><dt>ДИ</dt><dd>Должностная инструкция.</dd></div>
+      <div class="term"><dt>Загруженность маршрута</dt><dd>Процент используемого объёма/веса транспорта от максимального. Цель — 70–80%.</dd></div>
+      <div class="term"><dt>KPI</dt><dd>Ключевой показатель эффективности, по которому оценивается работа логиста.</dd></div>
+      <div class="term"><dt>Красный / жёлтый / зелёный маршрут</dt><dd>Статус маршрута по системе «Светофор» в зависимости от загруженности.</dd></div>
+      <div class="term"><dt>МпА</dt><dd>Менеджер по адаптации — куратор, который сопровождает вас на стажировке.</dd></div>
+      <div class="term"><dt>Мегалогист / GeliosSoft / Шедекс</dt><dd>Логистическое программное обеспечение для маршрутизации и учёта рейсов.</dd></div>
+      <div class="term"><dt>Наёмный транспорт</dt><dd>Транспорт сторонних перевозчиков, который привлекают при нехватке собственного парка.</dd></div>
+      <div class="term"><dt>Направление</dt><dd>Географическая группа маршрутов (например, «Тверь», «Псков»), привязанная к складу отправления.</dd></div>
+      <div class="term"><dt>ОСГ</dt><dd>Остаточный срок годности — время, оставшееся до истечения срока годности товара.</dd></div>
+      <div class="term"><dt>Погрузочный лист</dt><dd>Документ, по которому комплектовщики собирают заказ на складе.</dd></div>
+      <div class="term"><dt>Правило «правой руки»</dt><dd>Принцип построения маршрута: самый загруженный транспорт — на дальние точки, лёгкий — на локальные.</dd></div>
+      <div class="term"><dt>РОЛ</dt><dd>Руководитель отдела логистики — к нему эскалируют маршруты, которые нельзя заполнить или перенести.</dd></div>
+      <div class="term"><dt>Реализация</dt><dd>Документ в 1С, которым оформляется фактическая продажа/отгрузка товара.</dd></div>
+      <div class="term"><dt>Система «Светофор»</dt><dd>Методика оценки загруженности маршрутов: зелёная зона (70–80%), жёлтая (60–70% или 80–90%), красная (&lt;60% или &gt;90%).</dd></div>
+      <div class="term"><dt>SLA</dt><dd>Согласованные с клиентом условия доставки (сроки, временные окна), которые нельзя нарушать без потерь для компании.</dd></div>
+      <div class="term"><dt>ТД</dt><dd>Торговый дом — часть названия компании, ООО ТД «ЛФБ».</dd></div>
+      <div class="term"><dt>Точка</dt><dd>Конкретный адрес доставки клиента в графике или маршруте.</dd></div>
+      <div class="term"><dt>№ УТ клиента</dt><dd>Уникальный номер клиента в учётной системе 1С.</dd></div>
+      <div class="term"><dt>«Фреш»</dt><dd>Товарная категория скоропортящейся продукции с коротким ОСГ.</dd></div>
+      <div class="term"><dt>Холостой пробег</dt><dd>Пробег транспорта без груза или между точками без загрузки — то, что стараются минимизировать при построении маршрута.</dd></div>
+      <div class="term"><dt>ППК</dt><dd>Положение по политике компании — внутренний нормативный документ, например ППК «Логистика».</dd></div>
+    </dl>
+  </div>
+
+  <div class="section">
+    <div class="kicker">Зачем эти материалы</div>
+    <h2>Что вы будете изучать</h2>
+    <p class="intro">Каждый документ ниже — не формальность, а инструмент, которым вы будете пользоваться в первый же рабочий день. После изучения каждого материала — короткий тест: он не для галочки, а чтобы вы сами увидели, что усвоено хорошо, а что стоит перечитать.</p>
+
+    <div class="callout">
+      <b>Как проходит проверка знаний.</b> Входное тестирование — на платформе HR Visor (день 1, утро). Тесты по регламентам и должностной инструкции — через короткую форму на базе Google Apps Script: 5–7 вопросов, 5–10 минут, результат сразу виден вам и МпА.
+    </div>
+
+    <div class="material">
+      <div class="num">1</div>
+      <div>
+        <h3>Должностная инструкция логиста <span class="badge">день 1</span></h3>
+        <p class="why">Даёт общую картину: зачем нужен пост, что от вас ждут и по каким цифрам будут оценивать работу.</p>
+        <p class="takeaway">Ключевое, что нужно унести: цель поста, 3 главных KPI, целевая загруженность маршрута — 70–80%.</p>
+      </div>
+    </div>
+
+    <div class="material">
+      <div class="num">2</div>
+      <div>
+        <h3>«Соблюдение температурного режима во время перевозок» <span class="badge">день 1</span></h3>
+        <p class="why">Продукция едет при -18°C, +2…+6°C или +20°C — ошибка в перевозке портит товар и деньги компании.</p>
+        <p class="takeaway">Ключевое: правила загрузки/выгрузки, документы водителя, порядок осмотра поданного транспорта.</p>
+      </div>
+    </div>
+
+    <div class="material">
+      <div class="num">3</div>
+      <div>
+        <h3>«Добавление новых точек в графики» <span class="badge">день 2</span></h3>
+        <p class="why">Это ваша ежедневная задача с первой недели: новые точки клиентов появляются постоянно, и их нужно корректно заносить в график.</p>
+        <p class="takeaway">Ключевое: кто вносит точку в 1С, а кто — в график на сервере, и что именно нужно уточнить у менеджера.</p>
+      </div>
+    </div>
+
+    <div class="material">
+      <div class="num">4</div>
+      <div>
+        <h3>«Работа с продукцией категории «Фреш»» <span class="badge">день 2</span></h3>
+        <p class="why">«Фреш» — скоропортящаяся продукция с коротким сроком годности: цепочка от заказа до доставки построена по минутам.</p>
+        <p class="takeaway">Ключевое: дни выписки заказов, сроки подачи поставщикам, что именно формирует логист в этой цепочке.</p>
+      </div>
+    </div>
+
+    <div class="material">
+      <div class="num">5</div>
+      <div>
+        <h3>ППК «Логистика» — система «Светофор» <span class="badge">день 3</span></h3>
+        <p class="why">Это философия всего отдела: каждый процент загруженности машины — это реальные деньги компании.</p>
+        <p class="takeaway">Ключевое: границы зелёной/жёлтой/красной зоны и порядок действий с «красным» маршрутом.</p>
+      </div>
+    </div>
+
+    <div class="material">
+      <div class="num">6</div>
+      <div>
+        <h3>Этический кодекс компании <span class="badge">день 3</span></h3>
+        <p class="why">Помогает понять, какие принципы и цели стоят за повседневной работой ТД «ЛФБ».</p>
+        <p class="takeaway">Ключевое: сможете своими словами объяснить цель компании.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="section">
+    <span class="day-tag">Стажировка · День 1</span>
+    <h2>Знакомство с постом</h2>
+    <p class="day-goal">Цель за день: доступы получены, должностная инструкция и регламент по температуре изучены и проверены тестом, документы водителя разобраны на конкретном примере.</p>
+
+    <div class="timeblock">
+      <h4>Утро</h4>
+      <div class="item">
+        <div class="item-title">Welcome с МпА</div>
+        <div class="item-desc">Получить план стажировки, доступы к 1С, Мегалогист, GeliosSoft, Excel, Шедекс и HR Visor. Уточнить формат ежедневной обратной связи.</div>
+        <div class="result">Результат: <b>доступы получены, формат обратной связи понятен.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тестирование на HR Visor</div>
+        <div class="item-desc">Пройти входное тестирование — оно поможет скорректировать план адаптации под ваши сильные стороны.</div>
+        <div class="result">Результат: <b>тест пройден.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>День</h4>
+      <div class="item">
+        <div class="item-title">Изучение должностной инструкции логиста</div>
+        <div class="item-desc">Цель поста, зона ответственности, обязанности, KPI, с кем логист взаимодействует ежедневно.</div>
+        <div class="result">Результат: <b>своими словами объясняете цель поста и называете 3 ключевых KPI.</b></div>
+        <span class="tag high">🏆 High</span><span class="tag quick">Quick Win</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тест по должностной инструкции</div>
+        <div class="item-desc">Короткая форма на базе Google-скрипта — 5 минут.</div>
+        <div class="result">Результат: <b>тест пройден, результат передан МпА.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Изучение регламента по температурному режиму</div>
+        <div class="item-desc">Режимы перевозки (-18°C, +2…+6°C, +20°C), правила загрузки/выгрузки, документы водителя.</div>
+        <div class="result">Результат: <b>можете перечислить документы водителя и объяснить порядок осмотра транспорта.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тест по регламенту</div>
+        <div class="item-desc">Форма на базе Google-скрипта.</div>
+        <div class="result">Результат: <b>тест пройден.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>Вечер</h4>
+      <div class="item">
+        <div class="item-title">Разбор кейса: несоответствие транспорта</div>
+        <div class="item-desc">Письменно разобрать: какие документы должны быть у водителя перед выездом, и что делает логист, если поданный транспорт не соответствует заказанному.</div>
+        <div class="result">Результат: <b>письменный разбор готов и показан МпА.</b></div>
+        <span class="tag quick">Quick Win</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Обратная связь и итоги дня</div>
+        <div class="item-desc">Написать МпА: что выполнено, что нет и почему, хватило ли информации и поддержки.</div>
+        <div class="result">Результат: <b>обратная связь отправлена, приоритеты на день 2 согласованы.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="section">
+    <span class="day-tag">Стажировка · День 2</span>
+    <h2>Графики, маршрутизация и «Фреш»</h2>
+    <p class="day-goal">Цель за день: точка самостоятельно добавлена в график, регламент «Фреш» изучен и применён на реальном кейсе, стоимость перевозки рассчитана.</p>
+
+    <div class="timeblock">
+      <h4>Утро</h4>
+      <div class="item">
+        <div class="item-title">Изучение инструкции «Добавление точек в графики»</div>
+        <div class="item-desc">Что указывает менеджер в заявке, кто вносит точку в 1С, а кто — в график на сервере.</div>
+        <div class="result">Результат: <b>понимаете разницу между внесением в 1С и в график.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тест по инструкции</div>
+        <div class="item-desc">Форма на базе Google-скрипта.</div>
+        <div class="result">Результат: <b>тест пройден.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Практика: добавление тестовой точки</div>
+        <div class="item-desc">Под контролем МпА добавить точку в график на сервере: грузополучатель, № УТ клиента, адрес, координаты, нужный график.</div>
+        <div class="result">Результат: <b>точка добавлена корректно, менеджер уведомлён.</b></div>
+        <span class="tag high">🏆 High</span><span class="tag quick">Quick Win</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>День</h4>
+      <div class="item">
+        <div class="item-title">Изучение регламента «Фреш»</div>
+        <div class="item-desc">Дни выписки заказов, сроки подачи поставщикам (Юнион-ФУД, Корона-ФУД), роль логиста в цепочке.</div>
+        <div class="result">Результат: <b>можете описать полный цикл заказа «Фреш» от заявки до отгрузки.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тест по регламенту «Фреш»</div>
+        <div class="item-desc">Форма на базе Google-скрипта.</div>
+        <div class="result">Результат: <b>тест пройден.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Кейс и чек-лист «Фреш»</div>
+        <div class="item-desc">Разобрать пример с заказом ИП Мумитроллева Т.Я., составить чек-лист логиста на день отгрузки.</div>
+        <div class="result">Результат: <b>чек-лист готов и показан МпА.</b></div>
+        <span class="tag high">🏆 High</span><span class="tag quick">Quick Win</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>Вечер</h4>
+      <div class="item">
+        <div class="item-title">Расчёт стоимости перевозки</div>
+        <div class="item-desc">Рассчитать стоимость трёх рейсов собственным транспортом, применяя правило «правой руки».</div>
+        <div class="result">Результат: <b>расчёт выполнен и обоснован.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Обратная связь и итоги дня</div>
+        <div class="item-desc">Написать МпА обратную связь по второму дню.</div>
+        <div class="result">Результат: <b>обратная связь отправлена.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="section">
+    <span class="day-tag">Стажировка · День 3</span>
+    <h2>Система «Светофор», KPI и итоги</h2>
+    <p class="day-goal">Финальный день: от изучения ключевой политики отдела — к итоговой встрече, на которой подтверждается ваше соответствие должности.</p>
+
+    <div class="timeblock">
+      <h4>Утро</h4>
+      <div class="item">
+        <div class="item-title">Изучение ППК «Логистика» (система «Светофор»)</div>
+        <div class="item-desc">Целевая загруженность 70–80%, границы зелёной/жёлтой/красной зоны, порядок действий с «красным» маршрутом.</div>
+        <div class="result">Результат: <b>можете определить статус маршрута и объяснить, что делать дальше.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Тест по ППК «Логистика»</div>
+        <div class="item-desc">Форма на базе Google-скрипта.</div>
+        <div class="result">Результат: <b>тест пройден.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Задание: статусы маршрутов</div>
+        <div class="item-desc">По трём условным маршрутам с заданной загруженностью определить статус «Светофора» и обосновать действия.</div>
+        <div class="result">Результат: <b>решения обоснованы и соответствуют регламенту.</b></div>
+        <span class="tag high">🏆 High</span><span class="tag quick">Quick Win</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>День</h4>
+      <div class="item">
+        <div class="item-title">Анализ рейсов и предложения по оптимизации</div>
+        <div class="item-desc">Провести анализ рейсов за период (период определит МпА), предложить способы повышения загруженности.</div>
+        <div class="result">Результат: <b>анализ и предложения переданы МпА.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">KPI логиста и приоритеты на неделю</div>
+        <div class="item-desc">Изучить таблицу KPI и успешных/неуспешных действий из должностной инструкции.</div>
+        <div class="result">Результат: <b>сформулированы 3 личных приоритета на первую рабочую неделю.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+    </div>
+
+    <div class="timeblock">
+      <h4>Вечер</h4>
+      <div class="item">
+        <div class="item-title">Этический кодекс компании</div>
+        <div class="item-desc">Изучить кодекс и своими словами описать цель компании ЛФБ.</div>
+        <div class="result">Результат: <b>краткое описание цели компании готово.</b></div>
+        <span class="tag medium">⚡ Medium</span>
+      </div>
+      <div class="item">
+        <div class="item-title">Итоговая встреча с МпА</div>
+        <div class="item-desc">Обсудить итоги стажировки, заполнить практические задания для оценки соответствия должности в дорожной карте, получить итоговое заключение.</div>
+        <div class="result">Результат: <b>итоги зафиксированы, решение по должности принято.</b></div>
+        <span class="tag high">🏆 High</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div>
+      <h3>Отмечайте прогресс в дорожной карте</h3>
+      <p>Все задачи, тесты и практические задания — в интерактивной дорожной карте с трекингом прогресса.</p>
+    </div>
+    <a class="btn" href="roadmap_logist.html">Открыть дорожную карту →</a>
+  </div>
+
+  <div class="section">
+    <div class="kicker">После стажировки</div>
+    <h2>Что будет оцениваться дальше</h2>
+    <p class="intro">Показатели ниже — из должностной инструкции логиста. Именно по ним будет оцениваться ваша работа после стажировки, на постоянной позиции.</p>
+    <table>
+      <tr><th>KPI</th><th>Целевое значение</th><th>Периодичность</th></tr>
+      <tr><td>Загруженность маршрутов</td><td>70–80% (зелёная зона «Светофора»)</td><td>Ежедневно</td></tr>
+      <tr><td>Маршрутный лист передан на склад в срок</td><td>100%</td><td>Ежедневно</td></tr>
+      <tr><td>Количество недоставленных точек</td><td>Минимальное; каждая задокументирована</td><td>Ежедневно</td></tr>
+      <tr><td>Красные маршруты, отправленные без решения</td><td>0</td><td>Ежедневно</td></tr>
+      <tr><td>Количество наёмного транспорта</td><td>Оптимальное, обоснованное</td><td>Ежемесячно</td></tr>
+      <tr><td>Ежедневный отчёт сдан в срок</td><td>100%</td><td>Ежедневно</td></tr>
+    </table>
+  </div>
+
+  <footer>
+    ©2026 ООО ТД «ЛФБ». Все авторские права защищены законом.<br>
+    Данный документ является частью коммерческой тайны. Никакая часть этой публикации не может быть воспроизведена или передана в любой форме или любыми средствами без разрешения владельца авторских прав.
+  </footer>
+
+</div>
+</body>
+</html>
