@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ключ с ответами — Логист-диспетчер · Для МпА</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F1EC; --ink:#1B1D1F; --ink-soft:#5A5F63; --asphalt:#26303D;
+    --line:#D9D5C8; --green:#2F8F5B; --green-soft:#E4F1E9;
+    --red:#C1503F; --red-soft:#F7E6E2; --amber:#B8791F; --amber-soft:#FBF0DC;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;line-height:1.55;}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 80px;}
+  h1,h2,h3{font-family:'Oswald',sans-serif;letter-spacing:.02em;margin:0;}
+
+  .warning{
+    background:var(--red-soft);border:1px solid var(--red);border-radius:var(--radius);
+    padding:12px 16px;font-size:13.5px;color:#7a2f22;margin-bottom:22px;font-weight:600;
+  }
+  header.top h1{font-size:26px;color:var(--asphalt);text-transform:uppercase;margin-bottom:4px;}
+  header.top .sub{font-size:14px;color:var(--ink-soft);font-style:italic;margin-bottom:20px;}
+
+  .section-title{margin-top:40px;margin-bottom:10px;font-size:19px;color:var(--asphalt);text-transform:uppercase;}
+  .section-note{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:8px;}
+  th{background:var(--asphalt);color:#fff;text-align:left;padding:8px 10px;font-size:12px;text-transform:uppercase;}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:#fff;}
+  .ans{color:#1d5b3c;font-weight:700;background:var(--green-soft);padding:2px 6px;border-radius:5px;}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+  .card h3{font-size:14.5px;margin-bottom:6px;color:var(--asphalt);}
+  .card .day-mark{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#fff;background:var(--asphalt);padding:2px 8px;border-radius:10px;margin-left:8px;text-transform:none;letter-spacing:0;}
+  .card ol,.card ul{margin:6px 0 0;padding-left:20px;font-size:13.5px;}
+  .card li{margin-bottom:4px;}
+  .card .label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:#8b877c;display:block;margin-top:8px;margin-bottom:2px;}
+  .card .label:first-child{margin-top:0;}
+  .card p{font-size:13.5px;margin:2px 0 0;}
+
+  .checklist-item{border-left:3px solid var(--green);padding-left:12px;margin-bottom:10px;}
+  .checklist-item b{display:block;font-size:13.5px;margin-bottom:2px;}
+  .checklist-item span{font-size:13px;color:var(--ink-soft);}
+
+  footer{margin-top:50px;font-size:11px;color:#918d81;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="warning">⚠ Только для МпА и РОЛ. Не пересылайте стажёру — здесь собраны правильные ответы и эталонные критерии оценки по всей программе стажировки логиста-диспетчера.</div>
+
+  <header class="top">
+    <h1>Ключ с ответами</h1>
+    <div class="sub">Логист-диспетчер · для проверки заданий стажировки, версия к дорожной карте и материалам</div>
+  </header>
+
+  <div class="section-title">1. Тест по материалам дня (Google-форма, День 1)</div>
+  <p class="section-note">Правильные ответы автоматически видны в связанной Google-таблице после отправки формы стажёром — здесь то же самое для быстрой сверки без открытия таблицы.</p>
+
+  <table>
+    <tr><th>№</th><th>Вопрос</th><th>Правильный ответ</th></tr>
+    <tr><td>1</td><td>Кому подчиняется логист-диспетчер?</td><td><span class="ans">Руководителю отдела логистики</span></td></tr>
+    <tr><td>2</td><td>Главная задача поста?</td><td><span class="ans">Операционная поддержка отдела, снимает нагрузку с логиста и РОЛ</span></td></tr>
+    <tr><td>3</td><td>Когда счёт вносится в реестр оплаты?</td><td><span class="ans">В тот же день, когда поступил</span></td></tr>
+    <tr><td>4</td><td>Что входит в «заказы на приобретение»?</td><td><span class="ans">Только привлечённый (наёмный) транспорт</span></td></tr>
+    <tr><td>5</td><td>Требование к возврату первичной документации?</td><td><span class="ans">100% — без задержек</span></td></tr>
+    <tr><td>6</td><td>С кем взаимодействует по возврату документов?</td><td><span class="ans">Склад (РОХ)</span></td></tr>
+    <tr><td>7</td><td>Максимальное время загрузки?</td><td><span class="ans">15 минут</span></td></tr>
+    <tr><td>8</td><td>Температура тела замороженного продукта?</td><td><span class="ans">Не выше −18 °C</span></td></tr>
+    <tr><td>9</td><td>Температура кузова перед погрузкой?</td><td><span class="ans">Не выше −5 °C</span></td></tr>
+    <tr><td>10</td><td>На чём размещается продукция в кузове?</td><td><span class="ans">На европоддонах 1200×800 мм</span></td></tr>
+    <tr><td>11</td><td>Право компании при несоответствии транспорта?</td><td><span class="ans">Отказаться от поданных ТС</span></td></tr>
+    <tr><td>12</td><td>По каким дням выписывается «Фреш»?</td><td><span class="ans">Понедельник, среда, пятница</span></td></tr>
+    <tr><td>13</td><td>Срок подачи заказа «Юнион-ФУД»?</td><td><span class="ans">До 14:30</span></td></tr>
+    <tr><td>14</td><td>Срок подачи заказа «Корона-ФУД»?</td><td><span class="ans">До 16:00</span></td></tr>
+    <tr><td>15</td><td>На каком этапе появляется диспетчер в цепочке «Фреш»?</td><td><span class="ans">Реагирует на задержку/проблему с доставкой</span></td></tr>
+    <tr><td>16</td><td>Почему важна скорость реакции для «Фреш»?</td><td><span class="ans">Короткий срок годности — счёт на часы</span></td></tr>
+  </table>
+
+  <div class="section-title">2. День 1 — прочие задания (без формы, но с проверяемым результатом)</div>
+
+  <div class="card">
+    <h3>Должностная инструкция — устный ответ стажёра <span class="day-mark">День 1</span></h3>
+    <span class="label">Эталонный ответ (3 любых из 5 KPI)</span>
+    <ul>
+      <li>Заказы на привлечённый транспорт сформированы в срок — 100%</li>
+      <li>Реестр оплаты счетов актуален — 100% в день поступления</li>
+      <li>Первичная документация возвращена на склад — 100% без задержек</li>
+      <li>Претензии к ТК поданы, задокументированы, урегулированы — 100%</li>
+      <li>Документы переданы в головной офис — 100% по графику</li>
+    </ul>
+    <span class="label">С кем взаимодействует ежедневно</span>
+    <p>РОЛ, логист, транспортные компании, склад (РОХ), бухгалтерия, головной офис.</p>
+  </div>
+
+  <div class="card">
+    <h3>Температурный режим — что считается нарушением <span class="day-mark">День 1</span></h3>
+    <span class="label">Эталонный ответ (любые пункты)</span>
+    <ul>
+      <li>Температура кузова перед погрузкой выше −5 °C</li>
+      <li>Температура груза при погрузке/перевозке выше −18 °C (для заморозки, если иной режим не указан на упаковке)</li>
+      <li>Превышение времени загрузки (более 15 минут)</li>
+      <li>Открыты обе дверцы кузова при выгрузке / нет защитных шторок</li>
+      <li>Продукция не на европоддонах, без зазоров для циркуляции воздуха</li>
+      <li>У поданного транспорта нет санитарного паспорта, санобработки или рабочего охлаждения</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Регламент «Фреш» — описание цикла своими словами <span class="day-mark">День 1</span></h3>
+    <span class="label">Эталонный ответ (проверяйте по ключевым точкам, не дословно)</span>
+    <ol>
+      <li>Менеджер оформляет заказ клиента в 1С за 1 календарный день до даты доставки</li>
+      <li>Оператор закупок выводит отчёт в 1С и отправляет заказ поставщику (Юнион-ФУД до 14:30, Корона-ФУД до 16:00) — за 2 дня до доставки</li>
+      <li>Поставщик выставляет счёт, оператор закупок проверяет и подтверждает</li>
+      <li>Бухгалтер-оператор оприходует товар, даёт сигнал на выписку</li>
+      <li>Операторы 1С формируют реализацию, логист — погрузочный лист с комментарием</li>
+      <li>Товар приходит на склад в 05:00–06:30, комплектовщики собирают заказ</li>
+      <li>Доставка клиенту по маршрутному листу</li>
+    </ol>
+    <span class="label">Важно, чтобы стажёр отметил</span>
+    <p>Диспетчер сам заказ не оформляет — включается при задержке/проблеме, поэтому важно понимание всей цепочки, а не только своего шага.</p>
+  </div>
+
+  <div class="section-title">3. День 2 — практика (ролевые звонки и разбор кейса)</div>
+  <p class="section-note">Здесь нет единственного «правильного» текста — оценивайте по структуре и ключевым пунктам ниже.</p>
+
+  <div class="card">
+    <h3>Практика: обычный чек-ин с водителем <span class="day-mark">День 2</span></h3>
+    <span class="label">Что должно прозвучать в звонке</span>
+    <ul>
+      <li>Подтверждение факта выезда на маршрут вовремя</li>
+      <li>Проверка, что водитель ознакомлен с маршрутным листом и понимает порядок точек</li>
+      <li>Договорённость о контрольных точках связи в течение дня</li>
+    </ul>
+    <span class="label">Не должно быть</span>
+    <p>Лишних вопросов не по делу, сумбурного порядка, отсутствия хотя бы одного из трёх пунктов выше.</p>
+  </div>
+
+  <div class="card">
+    <h3>Практика: звонок — водитель сообщает о поломке <span class="day-mark">День 2</span></h3>
+    <span class="label">Порядок, который должен соблюсти стажёр</span>
+    <ol>
+      <li>«Ты цел? С тобой всё в порядке?» — первый вопрос, всегда</li>
+      <li>Где находится водитель и что произошло</li>
+      <li>Что с грузом и машиной</li>
+      <li>Предложить план действий (кто выезжает на помощь, что делать дальше)</li>
+    </ol>
+    <span class="label">Красный флаг</span>
+    <p>Если стажёр начал с вопросов про груз/машину раньше вопроса про состояние человека — это ошибка, даже если остальной звонок прошёл хорошо.</p>
+  </div>
+
+  <div class="card">
+    <h3>Разбор кейса: нештатная ситуация (письменный) <span class="day-mark">День 2</span></h3>
+    <span class="label">Эталонный порядок действий</span>
+    <ol>
+      <li>Убедиться, что водитель цел</li>
+      <li>Выяснить обстоятельства произошедшего</li>
+      <li>Немедленно уведомить РОЛ</li>
+      <li>При угрозе опоздания — заблаговременно уведомить клиента</li>
+      <li>Координировать действия водителя до прибытия помощи или завершения ситуации</li>
+      <li>Зафиксировать в журнале диспетчера: водитель, маршрут, время, причина, принятые меры</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h3>Практика: звонок клиенту о задержке <span class="day-mark">День 2</span></h3>
+    <span class="label">Что должно прозвучать</span>
+    <ul>
+      <li>Факт задержки — сказан прямо, без долгих оправданий</li>
+      <li>Сразу предложен новый ориентир по времени</li>
+      <li>Уточнено, устраивает ли это клиента</li>
+    </ul>
+    <span class="label">Тон</span>
+    <p>Спокойный и уважительный — не заискивающий и не оправдывающийся. Излишние извинения так же плохо, как и сухость.</p>
+  </div>
+
+  <div class="card">
+    <h3>Практика: полный цикл реакции на инцидент <span class="day-mark">День 2</span></h3>
+    <span class="label">Обязательные шаги по порядку</span>
+    <ol>
+      <li>Звонок водителю (по порядку из «поломки» выше)</li>
+      <li>Решение, нужно ли уведомлять клиента</li>
+      <li>Звонок клиенту, если решение — «да»</li>
+      <li>Уведомление РОЛ</li>
+      <li>Запись в журнал диспетчера со всеми полями</li>
+    </ol>
+    <span class="label">Как оценивать</span>
+    <p>Пропущен хотя бы один шаг или нарушен порядок — задание не засчитывается, даже если итоговый результат оказался «удачным».</p>
+  </div>
+
+  <div class="section-title">4. Дни 3–5 — реальные обязанности: чек-лист для проверки</div>
+  <p class="section-note">Реальные задачи не имеют «единственно верного» результата — ниже критерии, по которым определяется, выполнено задание корректно или нет. Это те же критерии, что в блоке «Практические задания» дорожной карты.</p>
+
+  <div class="checklist-item">
+    <b>Ведение реестра оплаты счетов</b>
+    <span>Все счета внесены в реестр в день поступления, со всеми обязательными полями (дата, контрагент, сумма, статус), без пропусков.</span>
+  </div>
+  <div class="checklist-item">
+    <b>Оформление претензии к транспортной компании</b>
+    <span>Пройдены все шаги цикла: факты собраны, текст со ссылкой на регламент/договор подготовлен, согласован с РОЛ и направлен в ТК в день выявления нарушения.</span>
+  </div>
+  <div class="checklist-item">
+    <b>Мониторинг рейса и реакция на отклонение</b>
+    <span>Отклонение замечено вовремя в GeliosSoft, водитель опрошен по правильному порядку (сначала состояние человека), РОЛ проинформирован, инцидент зафиксирован в журнале со всеми полями.</span>
+  </div>
+  <div class="checklist-item">
+    <b>Контроль возврата первичной документации</b>
+    <span>Статус документов по рейсам проверен, документы возвращены на склад без задержек, зависшие случаи найдены и решены.</span>
+  </div>
+  <div class="checklist-item">
+    <b>Звонок водителю в нештатной ситуации (в реальных условиях)</b>
+    <span>Разговор спокойный и по делу: сначала состояние человека, потом факты, потом план действий — без лишней паники и лишних слов.</span>
+  </div>
+  <div class="checklist-item">
+    <b>Разговор с клиентом о задержке доставки (в реальных условиях)</b>
+    <span>Клиент проинформирован заранее и по существу, предложен новый ориентир по времени, тон спокойный и уважительный, доверие клиента не потеряно.</span>
+  </div>
+
+  <div class="section-title">5. Итоговое заключение — на что обратить внимание</div>
+  <p class="section-note">При заполнении итогового заключения в дорожной карте (День 5) ориентируйтесь на совокупность:</p>
+  <ul style="font-size:13.5px;">
+    <li>Тест по материалам дня — пройден с результатом не ниже 12/16 (75%) без пересдачи считается хорошим показателем усвоения теории.</li>
+    <li>Все 6 практических критериев из блока 4 — выполнены, а не «почти выполнены».</li>
+    <li>Софт-скиллы (звонки водителю и клиенту) — оцениваются одинаково строго что на репетиции (День 2), что в реальных условиях (Дни 3–5): разница в контексте, а не в требуемом качестве разговора.</li>
+  </ul>
+
+  <footer>
+    ©2026 ООО ТД «ЛФБ». Документ для внутреннего использования МпА и РОЛ. Не публикуется и не передаётся стажёрам.
+  </footer>
+
+</div>
+</body>
+</html>
