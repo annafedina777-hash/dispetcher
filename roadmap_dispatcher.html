@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дорожная карта — Логист-диспетчер · ТД «ЛФБ»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F1EC;
+    --ink:#1B1D1F;
+    --ink-soft:#5A5F63;
+    --asphalt:#26303D;
+    --line:#D9D5C8;
+    --green:#2F8F5B;
+    --green-soft:#E4F1E9;
+    --yellow:#D89A2C;
+    --yellow-soft:#FBF0DC;
+    --red:#C1503F;
+    --red-soft:#F7E6E2;
+    --grey:#AFAAA0;
+    --grey-soft:#E9E7E1;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 80px;}
+  h1,h2,h3{font-family:'Oswald', sans-serif;letter-spacing:.02em;margin:0;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- header ---------- */
+  header.top{margin-bottom:26px;}
+  header.top h1{font-size:30px;text-transform:uppercase;color:var(--asphalt);}
+  header.top .sub{font-size:15px;color:var(--ink-soft);font-style:italic;margin-top:4px;}
+
+  .id-card{
+    margin-top:18px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 20px;
+  }
+  @media (max-width:560px){ .id-card{grid-template-columns:1fr;} }
+  .id-field label{
+    display:block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;
+  }
+  .id-field input{
+    width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;
+    font-family:'IBM Plex Sans',sans-serif;font-size:14.5px;padding:3px 0;color:var(--ink);
+  }
+  .id-field input:focus{outline:none;border-bottom-color:var(--asphalt);}
+  .id-field.static div{font-size:14.5px;padding:3px 0;}
+
+  /* ---------- route progress ---------- */
+  .route{
+    position:relative;margin:30px 0 8px;padding:0 6px;
+  }
+  .route-track{
+    position:relative;height:6px;background:var(--grey-soft);border-radius:4px;overflow:visible;
+  }
+  .route-fill{
+    position:absolute;left:0;top:0;height:100%;background:var(--green);border-radius:4px;
+    width:0%;transition:width .5s ease;
+  }
+  .route-truck{
+    position:absolute;top:-15px;left:0%;transform:translateX(-50%) scaleX(-1);font-size:20px;
+    transition:left .5s ease;
+  }
+  .route-stops{display:flex;justify-content:space-between;margin-top:14px;}
+  .route-stop{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);text-align:center;flex:1;}
+
+  /* ---------- phases overview ---------- */
+  .phases-overview{display:flex;gap:10px;margin:26px 0 6px;}
+  .phase-ov{flex:1;border-radius:var(--radius);padding:12px 14px;color:#fff;}
+  .phase-ov-1{background:#3E5064;flex-grow:1;}
+  .phase-ov-2{background:#2F6B54;flex-grow:1;}
+  .phase-ov-3{background:#8A5A2B;flex-grow:3;}
+  .phase-ov-num{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-bottom:3px;}
+  .phase-ov-title{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;text-transform:uppercase;margin-bottom:3px;}
+  .phase-ov-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.9;}
+  @media (max-width:560px){ .phases-overview{flex-direction:column;} .phase-ov{flex-grow:1 !important;} }
+
+  /* ---------- phase banner (between day groups) ---------- */
+  .phase-banner{
+    margin-top:34px;margin-bottom:-4px;padding:12px 16px;border-radius:var(--radius);
+    display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  }
+  .phase-banner.p1{background:#3E5064;}
+  .phase-banner.p2{background:#2F6B54;}
+  .phase-banner.p3{background:#8A5A2B;}
+  .phase-banner-title{font-family:'Oswald',sans-serif;color:#fff;font-size:16px;text-transform:uppercase;letter-spacing:.02em;}
+  .phase-banner-sub{font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,.85);font-size:11.5px;}
+  .route-stop b{display:block;color:var(--ink);font-size:13px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;}
+  .route-pct{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);text-align:right;margin-top:2px;}
+
+  /* ---------- day sections ---------- */
+  .day{
+    margin-top:26px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden;
+  }
+  .day-head{
+    display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;user-select:none;
+    background:var(--asphalt);color:#fff;
+  }
+  .day-head .badge{
+    font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+    background:rgba(255,255,255,.14);border-radius:50%;width:30px;height:30px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .day-head h2{font-size:16px;color:#fff;flex:1;text-transform:uppercase;}
+  .day-head .count{font-family:'IBM Plex Mono',monospace;font-size:12px;opacity:.85;white-space:nowrap;}
+  .day-head .chev{transition:transform .25s ease;font-size:13px;}
+  .day.open .day-head .chev{transform:rotate(180deg);}
+  .day-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+  .day.open .day-body{max-height:4000px;}
+
+  .task{
+    display:flex;gap:12px;padding:14px 16px;border-top:1px solid var(--line);
+  }
+  .task.policy{background:var(--yellow-soft);}
+  .status-btn{
+    flex-shrink:0;width:26px;height:26px;border-radius:50%;border:2px solid var(--grey);
+    background:#fff;cursor:pointer;margin-top:2px;position:relative;transition:.15s ease;
+  }
+  .status-btn[data-state="progress"]{background:var(--yellow);border-color:var(--yellow);}
+  .status-btn[data-state="done"]{background:var(--green);border-color:var(--green);}
+  .status-btn[data-state="done"]::after{
+    content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:14px;font-weight:700;
+  }
+  .task-body{flex:1;min-width:0;}
+  .task-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px;}
+  .task-title{font-weight:600;font-size:14.5px;}
+  .tag-test{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    background:var(--asphalt);color:#fff;padding:2px 6px;border-radius:4px;
+  }
+  .task-desc{font-size:13.5px;color:var(--ink-soft);}
+  .task-desc em{color:var(--ink-soft);}
+  .state-label{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);margin-top:6px;
+  }
+  .note-row{margin-top:8px;}
+  .note-row input{
+    width:100%;max-width:320px;border:none;border-bottom:1px dashed var(--line);
+    background:transparent;font-size:12.5px;padding:3px 0;color:var(--ink);
+  }
+  .note-row input::placeholder{color:#b9b5aa;}
+  .note-row input:focus{outline:none;border-bottom-color:var(--asphalt);}
+
+  /* ---------- assessment ---------- */
+  .section-title{margin-top:44px;margin-bottom:6px;font-size:20px;text-transform:uppercase;color:var(--asphalt);}
+  .section-note{font-size:13.5px;color:var(--ink-soft);margin-bottom:18px;}
+
+  .assess-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;
+  }
+  .assess-top{display:flex;gap:10px;align-items:baseline;}
+  .assess-num{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:#fff;background:var(--asphalt);
+    border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .assess-title{font-weight:600;font-size:14.5px;}
+  .assess-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-top:10px;font-size:12.5px;color:var(--ink-soft);}
+  @media (max-width:560px){.assess-grid{grid-template-columns:1fr;}}
+  .assess-grid .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#8b877c;display:block;margin-bottom:2px;}
+  .verdict-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+  select.verdict{
+    font-family:'IBM Plex Sans',sans-serif;font-size:13px;padding:6px 10px;border-radius:20px;
+    border:1px solid var(--line);background:var(--grey-soft);color:var(--ink);cursor:pointer;
+  }
+  select.verdict[data-v="ok"]{background:var(--green-soft);border-color:var(--green);color:#1d5b3c;}
+  select.verdict[data-v="partial"]{background:var(--yellow-soft);border-color:var(--yellow);color:#7a5817;}
+  select.verdict[data-v="no"]{background:var(--red-soft);border-color:var(--red);color:#7a3327;}
+  .verdict-row input.comment{
+    flex:1;min-width:160px;border:none;border-bottom:1px dashed var(--line);background:transparent;
+    font-size:12.5px;padding:4px 0;color:var(--ink);
+  }
+  .verdict-row input.comment:focus{outline:none;border-bottom-color:var(--asphalt);}
+
+  /* ---------- final verdict ---------- */
+  .final-card{
+    background:var(--asphalt);color:#fff;border-radius:var(--radius);padding:20px;margin-top:22px;
+  }
+  .final-card h3{color:#fff;font-size:16px;text-transform:uppercase;margin-bottom:12px;}
+  .final-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+  .final-row select{
+    font-family:'IBM Plex Sans',sans-serif;font-size:14px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;
+  }
+  .final-row textarea{
+    width:100%;min-height:56px;border-radius:8px;border:none;padding:8px 10px;font-family:'IBM Plex Sans',sans-serif;
+    font-size:13.5px;resize:vertical;
+  }
+  .final-sign{display:flex;gap:24px;margin-top:14px;font-size:12.5px;color:#cfd3d8;flex-wrap:wrap;}
+  .final-sign b{color:#fff;display:block;font-size:13.5px;}
+
+  /* ---------- footer ---------- */
+  footer{margin-top:40px;font-size:11px;color:#918d81;line-height:1.6;}
+  .reset-btn{
+    margin-top:18px;background:none;border:1px solid var(--line);color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 14px;border-radius:20px;cursor:pointer;
+  }
+  .reset-btn:hover{border-color:var(--red);color:var(--red);}
+  .save-hint{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#a39f93;margin-top:6px;min-height:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">ООО ТД «ЛФБ» · Отдел логистики</div>
+    <h1>Дорожная карта на стажировку</h1>
+    <div class="sub">Стажёру на должность логиста-диспетчера · 5 дней</div>
+
+    <div class="id-card">
+      <div class="id-field">
+        <label>ФИО стажёра</label>
+        <input id="employeeName" type="text" placeholder="Впишите имя">
+      </div>
+      <div class="id-field static">
+        <label>Должность</label>
+        <div>Логист-диспетчер</div>
+      </div>
+      <div class="id-field static">
+        <label>Менеджер по адаптации</label>
+        <div>Федина Анна · lm1@tdlfb.ru</div>
+      </div>
+      <div class="id-field">
+        <label>Дата начала</label>
+        <input id="startDate" type="date">
+      </div>
+    </div>
+  </header>
+
+  <div class="phases-overview">
+    <div class="phase-ov phase-ov-1">
+      <div class="phase-ov-num">Этап 1</div>
+      <div class="phase-ov-title">Обучение</div>
+      <div class="phase-ov-meta">День 1 · 20%</div>
+    </div>
+    <div class="phase-ov phase-ov-2">
+      <div class="phase-ov-num">Этап 2</div>
+      <div class="phase-ov-title">Практика</div>
+      <div class="phase-ov-meta">День 2 · 20%</div>
+    </div>
+    <div class="phase-ov phase-ov-3">
+      <div class="phase-ov-num">Этап 3</div>
+      <div class="phase-ov-title">Реальные обязанности</div>
+      <div class="phase-ov-meta">Дни 3–5 · 60%</div>
+    </div>
+  </div>
+
+  <div class="route">
+    <div class="route-track">
+      <div class="route-fill" id="routeFill"></div>
+      <div class="route-truck" id="routeTruck">🚚</div>
+    </div>
+    <div class="route-stops">
+      <div class="route-stop" style="flex:1"><b>День 1</b>Обучение</div>
+      <div class="route-stop" style="flex:1"><b>День 2</b>Практика: водители и инциденты</div>
+      <div class="route-stop" style="flex:1"><b>День 3</b>Реальные обязанности I</div>
+      <div class="route-stop" style="flex:1"><b>День 4</b>Реальные обязанности II</div>
+      <div class="route-stop" style="flex:1"><b>День 5</b>Реальные обязанности III</div>
+    </div>
+    <div class="route-pct" id="routePct">0% пройдено</div>
+  </div>
+
+  <div id="days"></div>
+
+  <h2 class="section-title">Практические задания для оценки соответствия должности</h2>
+  <p class="section-note">Показывают, готов ли стажёр самостоятельно выполнять обязанности логиста. Составлены на основе должностной инструкции и изученных регламентов. Оценку по каждому пункту ставит МпА.</p>
+  <div id="assessments"></div>
+
+  <div class="final-card">
+    <h3>Заключение МпА</h3>
+    <div class="final-row">
+      <select id="finalVerdict">
+        <option value="">Итоговый статус…</option>
+        <option value="ok">Соответствует должности</option>
+        <option value="partial">Соответствует условно</option>
+        <option value="no">Не соответствует</option>
+      </select>
+    </div>
+    <textarea id="finalComment" placeholder="Комментарий: что требует доработки, рекомендации на испытательный срок…"></textarea>
+    <div class="final-sign">
+      <div><b>Федина Анна</b>Менеджер по адаптации</div>
+      <div id="finalDateShown"><b>—</b>Дата заключения</div>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">Сбросить прогресс</button>
+  <div class="save-hint" id="saveHint">&nbsp;</div>
+
+  <footer>
+    ©2026 ООО ТД «ЛФБ». Все авторские права защищены законом.<br>
+    Данный документ является частью коммерческой тайны. Никакая часть этой публикации не может быть воспроизведена или передана в любой форме или любыми средствами без разрешения владельца авторских прав.
+  </footer>
+</div>
+
+<script>
+(function(){
+  const DAYS = [
+    {
+      id:'d1', title:'ЗАДАЧИ НА 1 ДЕНЬ — ОБУЧЕНИЕ',
+      tasks:[
+        {id:'d1-1', title:'Welcome с РОЛ и МпА', desc:'Получить план стажировки на все 5 дней и доступы к GeliosSoft, 1С, Excel и корпоративной почте. Уточнить формат и время ежедневной обратной связи, к кому обращаться при срочном вопросе.'},
+        {id:'d1-2', title:'HR Visor', desc:'Пройти входное тестирование по ссылке от МпА. Это не экзамен, а инструмент для настройки программы стажировки под ваши сильные стороны — отвечайте честно.'},
+        {id:'d1-3', title:'Должностная инструкция логиста-диспетчера', policy:true, desc:'Прочитать разделы: цель поста, ключевой результат и KPI, зона ответственности, взаимодействие с РОЛ, логистом, ТК, складом, бухгалтерией и головным офисом (ред. от 15.05.2026).'},
+        {id:'d1-4', title:'Температурный режим при перевозках', policy:true, desc:'Регламент от 20.09.2023: режимы перевозки, как проверяется температура при погрузке, что считается нарушением. Пригодится в претензионной работе — на этот документ вы будете ссылаться в претензиях к ТК.'},
+        {id:'d1-5', title:'Реестр оплаты счетов', desc:'Разобраться со структурой реестра (дата поступления, контрагент, сумма, статус) и правилом «100% в день поступления» — ключевой KPI поста. Попросить МпА показать 2–3 заполненных примера.'},
+        {id:'d1-6', title:'Реестр контрагентов', desc:'Изучить, как устроена база ТК: тарифы по направлениям, контакты, условия договора, откуда берутся обновления и как часто их сверять.'},
+        {id:'d1-7', title:'Работа с продукцией «Фреш»', policy:true, desc:'Регламент от 27.03.2025. Коротко: дни выписки заказов, сроки, и где в цепочке появляется диспетчер — обычно на этапе реакции на задержку. Не нужно уметь оформлять заказы, нужен контекст для разговора с клиентом или ТК.'},
+        {id:'d1-8', title:'Претензионная работа с ТК', desc:'Изучить цикл из 6 шагов: выявление нарушения → сбор фактов → подготовка текста претензии со ссылкой на договор/регламент → согласование с РОЛ → отправка в ТК в день выявления → занесение в реестр и отслеживание статуса. Разобрать с МпА один пример из архива.'},
+        {id:'d1-9', title:'Возврат первичной документации', desc:'Разобраться, какие документы обязаны вернуться с рейса (ТТН, накладные, путевые листы), как отслеживается статус возврата, и что делать при задержке — сначала водитель, потом ТК, при необходимости РОЛ.'},
+        {id:'d1-10', title:'Обратная связь МпА', desc:'Написать Федина Анне (lm1@tdlfb.ru) по структуре: что выполнено, что нет и почему, хватило ли информации и поддержки, впечатления от дня. Согласовать, с чего начнётся день 2.'},
+        {id:'d1-11', title:'Тест по материалам дня', desc:'Пройти тест по всем трём материалам дня сразу — должностной инструкции, температурному режиму и регламенту «Фреш»: <a href="https://docs.google.com/forms/d/e/1FAIpQLSc1Ge1dXUbJtWFxcwSQVAU42JH0wgQkcTkhurvpslpB-6078g/viewform" target="_blank">открыть тест</a>. 16 вопросов, 10–15 минут, результат виден сразу после отправки.'},
+      ]
+    },
+    {
+      id:'d2', title:'ЗАДАЧИ НА 2 ДЕНЬ — ОБЩЕНИЕ С ВОДИТЕЛЯМИ И НЕШТАТНЫЕ СИТУАЦИИ: ПРАКТИКА',
+      tasks:[
+        {id:'d2-1', title:'Как устроена коммуникация с водителем', desc:'Изучить состав утреннего чек-ина: подтверждение выезда, сверка маршрутного листа, договорённость о контрольных точках связи в течение дня. Чек-ин — основа того, что вы вовремя заметите отклонение.'},
+        {id:'d2-2', title:'Практика: обычный чек-ин с водителем', desc:'Ролевой звонок с МпА в роли водителя: задать все нужные вопросы чётко и по делу, без сумбура. После звонка — разбор с МпА, что было лишним, а что забыли спросить.'},
+        {id:'d2-3b', title:'Практика: создание маршрута в 1С (тестовая база)', desc:'Под контролем МпА создать маршрут в 1С — не в боевой (Основной) базе, а в её копии, чтобы потренироваться без риска испортить реальные данные. Пройти весь путь: выбор точек, оформление, сохранение. Цель — снять страх перед интерфейсом 1С, а не отработать это на реальных маршрутах (этим занимается логист).'},
+        {id:'d2-4', title:'Разговор в стрессовой ситуации: принципы', desc:'Порядок из 4 шагов: 1) состояние человека («ты цел?») — всегда первый вопрос; 2) где находится и что произошло; 3) что с грузом и машиной; 4) план действий. Тон — ровный, независимо от паники собеседника.'},
+        {id:'d2-5', title:'Практика: звонок — водитель сообщает о поломке', desc:'Ролевая игра с МпА: водитель взволнован, сообщает о поломке или ДТП. Применить порядок из предыдущего задания. Разбор после звонка: не потерялись ли в панике собеседника.'},
+        {id:'d2-6', title:'Разбор кейса: нештатная ситуация', desc:'Письменно расписать порядок при ДТП, поломке или задержке: кого уведомить в первую очередь (РОЛ — немедленно), когда уведомлять клиента, что и как зафиксировать в журнале диспетчера (водитель, маршрут, время, причина, меры).'},
+        {id:'d2-7', title:'Практика: звонок клиенту о задержке', desc:'Ролевая игра: МпА в роли клиента. Сказать факт прямо без оправданий, сразу предложить новый ориентир по времени, уточнить, устраивает ли это клиента. Тон спокойный и уважительный, не заискивающий.'},
+        {id:'d2-8', title:'Практика: полный цикл реакции на инцидент', desc:'Смоделировать инцидент целиком без пауз: звонок водителю → решение об уведомлении клиента → звонок клиенту при необходимости → уведомление РОЛ → запись в журнал со всеми полями.'},
+        {id:'d2-9', title:'Обратная связь по практике дня', desc:'Обсудить с МпА все звонки и разборы: что получалось легко, где были лишние слова или неуверенность, какие фразы звучали неудачно и как сказать лучше.'},
+      ]
+    },
+    {
+      id:'d3', title:'ЗАДАЧИ НА 3 ДЕНЬ — РЕАЛЬНЫЕ ОБЯЗАННОСТИ, ДЕНЬ 1',
+      tasks:[
+        {id:'d3-1', title:'Самостоятельное ведение реестров за день', desc:'Вести реальный реестр оплаты счетов (каждый счёт — в день поступления, с полным набором полей) и реестр контрагентов за сегодняшний день. МпА рядом, но сначала попробуйте сами.'},
+        {id:'d3-2', title:'Реальный мониторинг рейсов', desc:'Держать сегодняшние рейсы под наблюдением в GeliosSoft весь день. При реальном отклонении — применить порядок из дня 2: звонок водителю, при необходимости уведомление РОЛ и запись в журнал.'},
+        {id:'d3-3', title:'Реальная переписка дня', desc:'Проверить почту и ответить на реальные входящие письма от ТК и коллег — по существу, грамотно и корректно. Переписка формирует, насколько вас воспринимают всерьёз в переговорах.'},
+        {id:'d3-4', title:'Отчёт по итогам дня', desc:'Составить реальный отчёт: что сделано, что на контроле, что передать завтра. Писать так, как если бы читал РОЛ, не видевший вас весь день.'},
+        {id:'d3-5', title:'Обратная связь МпА', desc:'Написать Федина Анне обратную связь по третьему дню: что получилось самостоятельно, где пришлось спрашивать.'},
+      ]
+    },
+    {
+      id:'d4', title:'ЗАДАЧИ НА 4 ДЕНЬ — РЕАЛЬНЫЕ ОБЯЗАННОСТИ, ДЕНЬ 2',
+      tasks:[
+        {id:'d4-1', title:'Реестры и мониторинг — увереннее, чем вчера', desc:'Вести реестры и мониторить рейсы, обращаясь к МпА заметно реже — сегодня вы уже знаете, где искать ответы сами.'},
+        {id:'d4-2', title:'Претензионная работа на реальном кейсе', desc:'Если есть реальный повод — пройти полный цикл претензии на практике: собрать факты, подготовить текст, согласовать с РОЛ, отправить в ТК. Если повода нет — разобрать с МпА один архивный случай целиком по всем 6 шагам.'},
+        {id:'d4-3', title:'Контроль возврата документации', desc:'Реально проверить, все ли ТТН, накладные и путевые листы по рейсам за 2 дня вернулись на склад. Если что-то «зависло» — найти, на каком этапе, и связаться с нужным человеком.'},
+        {id:'d4-4', title:'Отчёт по итогам дня', desc:'Составить реальный отчёт, включая статус претензии (если велась) и результат проверки документации.'},
+        {id:'d4-5', title:'Обратная связь МпА', desc:'Написать Федина Анне обратную связь по четвёртому дню: что стало легче по сравнению с днём 3, что ещё вызывает сомнения.'},
+      ]
+    },
+    {
+      id:'d5', title:'ЗАДАЧИ НА 5 ДЕНЬ — РЕАЛЬНЫЕ ОБЯЗАННОСТИ, ДЕНЬ 3 И ИТОГИ',
+      tasks:[
+        {id:'d5-1', title:'KPI и приоритеты недели', desc:'Ещё раз изучить таблицу KPI и успешных/неуспешных действий из ДИ — теперь уже с опытом 3 дней реальной работы. Сформулировать 3 конкретных, измеримых приоритета на первую рабочую неделю.'},
+        {id:'d5-2', title:'Полностью самостоятельный рабочий день', desc:'Провести день как обычный рабочий: самостоятельно решать порядок задач — реестры, мониторинг, переписка, претензии при поводе, без списка от МпА. Сначала искать ответ самому, потом спрашивать.'},
+        {id:'d5-3', title:'Подготовка к еженедельной передаче документов', desc:'Собрать пакет документов для еженедельной передачи в головной офис, проверить комплектность и оформление перед передачей.'},
+        {id:'d5-4', title:'Итоговый отчёт по тестовому периоду', desc:'Составить честный отчёт по итогам трёх дней: что получилось хорошо, что было сложно, какие вопросы ещё вызывают неуверенность.'},
+        {id:'d5-5', title:'Итоговая встреча с МпА и РОЛ', desc:'Обсудить очно три дня реальной работы: что подтвердилось из плана, что требует внимания дальше. Заполнить практические задания для оценки соответствия должности, получить итоговое заключение.'},
+      ]
+    },
+  ];
+
+  const ASSESS = [
+    {title:'Ведение реестра оплаты счетов', kpi:'Своевременность внесения счетов', crit:'Все счета внесены в реестр в день поступления, со всеми обязательными полями (дата, контрагент, сумма, статус), без пропусков'},
+    {title:'Оформление претензии к транспортной компании', kpi:'Претензионная работа', crit:'Пройдены все 6 шагов цикла: факты собраны, текст со ссылкой на регламент/договор подготовлен, согласован с РОЛ и направлен в ТК в день выявления нарушения'},
+    {title:'Мониторинг рейса и реакция на отклонение', kpi:'Диспетчерское сопровождение рейсов', crit:'Отклонение замечено вовремя в GeliosSoft, водитель опрошен по правильному порядку (сначала состояние человека), РОЛ проинформирован, инцидент зафиксирован в журнале со всеми полями'},
+    {title:'Контроль возврата первичной документации', kpi:'Возврат ТТН, накладных, путевых листов', crit:'Статус документов по рейсам проверен, документы возвращены на склад без задержек, зависшие случаи найдены и решены'},
+    {title:'Звонок водителю в нештатной ситуации', kpi:'Софт-скиллы: тон и структура разговора', crit:'Разговор спокойный и по делу: сначала состояние человека, потом факты, потом план действий — без лишней паники и лишних слов'},
+    {title:'Разговор с клиентом о задержке доставки', kpi:'Софт-скиллы: сложные разговоры', crit:'Клиент проинформирован заранее и по существу, предложен новый ориентир по времени, тон спокойный и уважительный, доверие клиента не потеряно'},
+  ];
+
+  const STATES = ['none','progress','done'];
+  const STATE_LABEL = {none:'Не начато', progress:'В процессе', done:'Готово'};
+
+  let state = {
+    employeeName:'', startDate:'', tasks:{}, notes:{},
+    assess:{}, assessComment:{}, finalVerdict:'', finalComment:'', finalDate:''
+  };
+
+  function allTaskIds(){ return DAYS.flatMap(d=>d.tasks.map(t=>t.id)); }
+
+  const PHASE_BANNERS = {
+    0: { cls:'p1', title:'Этап 1 · Обучение ППК и процессам', sub:'День 1 · 20% времени стажировки — теория и тесты' },
+    1: { cls:'p2', title:'Этап 2 · Практические задания', sub:'День 2 · 20% времени стажировки — тренировочные кейсы и ролевые игры под контролем МпА' },
+    2: { cls:'p3', title:'Этап 3 · Выполнение должностных обязанностей', sub:'Дни 3–5 · 60% времени стажировки — реальные задачи поста на тестовом периоде' },
+  };
+
+  function render(){
+    const daysEl = document.getElementById('days');
+    daysEl.innerHTML = '';
+    DAYS.forEach((day, idx)=>{
+      const doneCount = day.tasks.filter(t=>state.tasks[t.id]==='done').length;
+
+      const ph = PHASE_BANNERS[idx];
+      if (ph) {
+        const banner = document.createElement('div');
+        banner.className = 'phase-banner ' + ph.cls;
+        banner.innerHTML = `<span class="phase-banner-title">${ph.title}</span><span class="phase-banner-sub">${ph.sub}</span>`;
+        daysEl.appendChild(banner);
+      }
+
+      const wrap = document.createElement('div');
+      wrap.className = 'day' + (idx===0 ? ' open' : '');
+      wrap.innerHTML = `
+        <div class="day-head" data-day="${day.id}">
+          <div class="badge">${idx+1}</div>
+          <h2>${day.title}</h2>
+          <div class="count">${doneCount}/${day.tasks.length}</div>
+          <div class="chev">▾</div>
+        </div>
+        <div class="day-body">
+          ${day.tasks.map(t=>taskHtml(t)).join('')}
+        </div>`;
+      daysEl.appendChild(wrap);
+    });
+
+    document.querySelectorAll('.day-head').forEach(h=>{
+      h.addEventListener('click', ()=>{
+        h.closest('.day').classList.toggle('open');
+      });
+    });
+    document.querySelectorAll('.status-btn').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const cur = state.tasks[id] || 'none';
+        const next = STATES[(STATES.indexOf(cur)+1) % STATES.length];
+        state.tasks[id] = next;
+        save();
+        render();
+      });
+    });
+    document.querySelectorAll('.note-row input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        state.notes[inp.dataset.id] = inp.value;
+        save();
+      });
+    });
+
+    renderAssessments();
+    updateRoute();
+  }
+
+  function taskHtml(t){
+    const st = state.tasks[t.id] || 'none';
+    const note = state.notes[t.id] || '';
+    return `
+      <div class="task ${t.policy?'policy':''}">
+        <button class="status-btn" data-id="${t.id}" data-state="${st}" aria-label="Статус задачи"></button>
+        <div class="task-body">
+          <div class="task-top">
+            <span class="task-title">${t.title}</span>
+            ${t.policy ? '<span class="tag-test">регламент</span>' : ''}
+          </div>
+          <div class="task-desc">${t.desc}</div>
+          <div class="state-label">${STATE_LABEL[st]}</div>
+          <div class="note-row"><input type="text" data-id="${t.id}" placeholder="Инициалы / дата" value="${note.replace(/"/g,'&quot;')}"></div>
+        </div>
+      </div>`;
+  }
+
+  function renderAssessments(){
+    const el = document.getElementById('assessments');
+    el.innerHTML = ASSESS.map((a,i)=>{
+      const id = 'a'+i;
+      const v = state.assess[id] || '';
+      const comment = state.assessComment[id] || '';
+      return `
+        <div class="assess-card">
+          <div class="assess-top">
+            <div class="assess-num">${i+1}</div>
+            <div class="assess-title">${a.title}</div>
+          </div>
+          <div class="assess-grid">
+            <div><span class="lbl">Компетенция / KPI</span>${a.kpi}</div>
+            <div><span class="lbl">Критерий успешного выполнения</span>${a.crit}</div>
+          </div>
+          <div class="verdict-row">
+            <select class="verdict" data-id="${id}" data-v="${v}">
+              <option value="">Оценка МпА…</option>
+              <option value="ok" ${v==='ok'?'selected':''}>Соответствует</option>
+              <option value="partial" ${v==='partial'?'selected':''}>Частично</option>
+              <option value="no" ${v==='no'?'selected':''}>Не соответствует</option>
+            </select>
+            <input class="comment" data-id="${id}" placeholder="Комментарий" value="${comment.replace(/"/g,'&quot;')}">
+          </div>
+        </div>`;
+    }).join('');
+
+    el.querySelectorAll('select.verdict').forEach(sel=>{
+      sel.addEventListener('change', ()=>{
+        state.assess[sel.dataset.id] = sel.value;
+        sel.dataset.v = sel.value;
+        save();
+      });
+    });
+    el.querySelectorAll('input.comment').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        state.assessComment[inp.dataset.id] = inp.value;
+        save();
+      });
+    });
+  }
+
+  function updateRoute(){
+    const ids = allTaskIds();
+    const done = ids.filter(id=>state.tasks[id]==='done').length;
+    const pct = Math.round((done/ids.length)*100);
+    document.getElementById('routeFill').style.width = pct+'%';
+    document.getElementById('routeTruck').style.left = pct+'%';
+    document.getElementById('routePct').textContent = pct+'% пройдено ('+done+'/'+ids.length+')';
+  }
+
+  function bindHeader(){
+    const nameInp = document.getElementById('employeeName');
+    nameInp.value = state.employeeName;
+    nameInp.addEventListener('input', ()=>{ state.employeeName = nameInp.value; save(); });
+    nameInp.addEventListener('blur', ()=>{ pullRemoteForCurrentName_(); });
+
+    const dateInp = document.getElementById('startDate');
+    dateInp.value = state.startDate;
+    dateInp.addEventListener('input', ()=>{ state.startDate = dateInp.value; save(); });
+
+    const fv = document.getElementById('finalVerdict');
+    fv.value = state.finalVerdict;
+    fv.addEventListener('change', ()=>{
+      state.finalVerdict = fv.value;
+      if(fv.value && !state.finalDate){
+        state.finalDate = new Date().toISOString().slice(0,10);
+        document.getElementById('finalDateShown').innerHTML = '<b>'+state.finalDate+'</b>Дата заключения';
+      }
+      save();
+    });
+    if(state.finalDate){
+      document.getElementById('finalDateShown').innerHTML = '<b>'+state.finalDate+'</b>Дата заключения';
+    }
+
+    const fc = document.getElementById('finalComment');
+    fc.value = state.finalComment;
+    fc.addEventListener('input', ()=>{ state.finalComment = fc.value; save(); });
+
+    document.getElementById('resetBtn').addEventListener('click', async ()=>{
+      if(!confirm('Сбросить весь прогресс по дорожной карте?')) return;
+      const prevName = state.employeeName;
+      state = {employeeName:'', startDate:'', tasks:{}, notes:{}, assess:{}, assessComment:{}, finalVerdict:'', finalComment:'', finalDate:''};
+      try{ await storageDelete_(STORAGE_KEY); }catch(e){}
+      if(SYNC_URL && prevName){ try{ await remoteDelete_(remoteKeyFor_(prevName)); }catch(e){} }
+      document.getElementById('finalDateShown').innerHTML = '<b>—</b>Дата заключения';
+      render();
+      bindHeader();
+    });
+  }
+
+  // ---------- cross-device sync (optional) ----------
+  // Заполните SYNC_URL адресом веб-приложения Google Apps Script
+  // (см. файл Хранилище_прогресса_Google_Apps_Script.gs), чтобы прогресс
+  // сохранялся в Google-таблице и был виден с любого устройства/браузера.
+  // Пока строка пустая — работает только локальное хранилище браузера.
+  const SYNC_URL = '';
+
+  function slug_(s){
+    return (s || '').trim().toLowerCase().replace(/\s+/g, '_');
+  }
+  function remoteKeyFor_(name){
+    return STORAGE_KEY + '::' + slug_(name);
+  }
+  async function remoteSave_(key, valueStr){
+    if(!SYNC_URL) return;
+    try{
+      await fetch(SYNC_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ key: key, value: valueStr, action: 'set' }),
+      });
+    }catch(e){ /* offline or sync unavailable — local copy is still saved */ }
+  }
+  async function remoteLoad_(key){
+    if(!SYNC_URL) return null;
+    try{
+      const res = await fetch(SYNC_URL + '?key=' + encodeURIComponent(key));
+      const data = await res.json();
+      return data && data.value ? data.value : null;
+    }catch(e){ return null; }
+  }
+  async function remoteDelete_(key){
+    if(!SYNC_URL) return;
+    try{
+      await fetch(SYNC_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ key: key, action: 'delete' }),
+      });
+    }catch(e){}
+  }
+  async function pullRemoteForCurrentName_(){
+    if(!SYNC_URL || !state.employeeName) return;
+    const hint = document.getElementById('saveHint');
+    const remoteValue = await remoteLoad_(remoteKeyFor_(state.employeeName));
+    if(remoteValue){
+      try{
+        const parsed = JSON.parse(remoteValue);
+        state = Object.assign(state, parsed, { employeeName: state.employeeName });
+        render();
+        bindHeader();
+        if(hint) hint.textContent = 'прогресс подтянут с сервера ✓';
+      }catch(e){}
+    }
+  }
+
+  // ---------- storage: uses window.storage inside Claude.ai, falls back to
+  // localStorage when the page is opened as a normal webpage (GitHub Pages,
+  // any hosting, or a local file) ----------
+  const STORAGE_KEY = 'lfb-logist-dispatcher-roadmap-202060';
+  const hasClaudeStorage = () => typeof window.storage !== 'undefined' && window.storage && typeof window.storage.set === 'function';
+
+  async function storageSet_(key, value){
+    if(hasClaudeStorage()){
+      return await window.storage.set(key, value, false);
+    }
+    localStorage.setItem(key, value);
+    return true;
+  }
+  async function storageGet_(key){
+    if(hasClaudeStorage()){
+      return await window.storage.get(key, false);
+    }
+    const value = localStorage.getItem(key);
+    if(value === null) throw new Error('not found');
+    return { value };
+  }
+  async function storageDelete_(key){
+    if(hasClaudeStorage()){
+      return await window.storage.delete(key, false);
+    }
+    localStorage.removeItem(key);
+    return true;
+  }
+
+  let saveTimer = null;
+  function save(){
+    const hint = document.getElementById('saveHint');
+    if(hint) hint.textContent = 'сохранение…';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async ()=>{
+      try{
+        const valueStr = JSON.stringify(state);
+        await storageSet_(STORAGE_KEY, valueStr);
+        if(state.employeeName){
+          await remoteSave_(remoteKeyFor_(state.employeeName), valueStr);
+        }
+        if(hint) hint.textContent = SYNC_URL && state.employeeName ? 'сохранено и синхронизировано ✓' : 'сохранено локально ✓';
+      }catch(e){
+        if(hint) hint.textContent = 'не удалось сохранить (нет доступа к хранилищу)';
+      }
+    }, 300);
+  }
+
+  async function load(){
+    try{
+      const res = await storageGet_(STORAGE_KEY);
+      if(res && res.value){
+        const parsed = JSON.parse(res.value);
+        state = Object.assign(state, parsed);
+      }
+    }catch(e){ /* no saved state yet, or storage unavailable */ }
+    render();
+    bindHeader();
+    if(SYNC_URL && state.employeeName){
+      await pullRemoteForCurrentName_();
+    }
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
