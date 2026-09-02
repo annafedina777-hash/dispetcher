@@ -563,7 +563,7 @@
       const prevName = state.employeeName;
       state = {employeeName:'', startDate:'', tasks:{}, notes:{}, assess:{}, assessComment:{}, finalVerdict:'', finalComment:'', finalDate:''};
       try{ await storageDelete_(STORAGE_KEY); }catch(e){}
-      if(SYNC_URL && prevName){ try{ await remoteDelete_(remoteKeyFor_(prevName)); }catch(e){} }
+      if( && prevName){ try{ await remoteDelete_(remoteKeyFor_(prevName)); }catch(e){} }
       document.getElementById('finalDateShown').innerHTML = '<b>—</b>Дата заключения';
       render();
       bindHeader();
