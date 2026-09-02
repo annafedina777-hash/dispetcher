@@ -569,6 +569,7 @@
       bindHeader();
     });
   }
+
   const SYNC_URL = 'https://script.google.com/macros/s/AKfycbwJyREa5CQr-PIbvvGrNuSWTodDqyifdF8WeIY1-C3KpDx8w5F9QvpeQkLQvN_9B6EXKw/exec';
 
   function slug_(s){
@@ -577,13 +578,13 @@
   function remoteKeyFor_(name){
     return STORAGE_KEY + '::' + slug_(name);
   }
-  async function remoteSave_(key, valueStr){
+  async function remoteSave_(key, valueStr, meta){
     if(!SYNC_URL) return;
     try{
       await fetch(SYNC_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ key: key, value: valueStr, action: 'set' }),
+        body: JSON.stringify({ key: key, value: valueStr, action: 'set', meta: meta || {} }),
       });
     }catch(e){ /* offline or sync unavailable — local copy is still saved */ }
   }
@@ -649,6 +650,41 @@
     return true;
   }
 
+  const ROLE_LABEL = 'Логист-диспетчер';
+  const VERDICT_LABEL = { ok:'Соответствует должности', partial:'Соответствует условно', no:'Не соответствует', '':'—' };
+
+  function buildMeta_(){
+    const dayProgressText = DAYS.map(function(day){
+      const total = day.tasks.length;
+      const done = day.tasks.filter(function(t){ return state.tasks[t.id]==='done'; }).length;
+      const pct = total ? Math.round((done/total)*100) : 0;
+      return day.title.replace(/^ЗАДАЧИ НА /i,'').split(' — ')[0] + ': ' + pct + '%';
+    }).join(' · ');
+
+    const commentsParts = [];
+    ASSESS.forEach(function(a, i){
+      const id = 'a'+i;
+      const v = state.assess[id];
+      const c = state.assessComment[id];
+      if(v || c){
+        const vLabel = v==='ok' ? 'Соответствует' : v==='partial' ? 'Частично' : v==='no' ? 'Не соответствует' : 'Не оценено';
+        commentsParts.push((i+1)+'. '+a.title+' — '+vLabel+(c ? ': '+c : ''));
+      }
+    });
+    if(state.finalComment){
+      commentsParts.push('Итог: '+state.finalComment);
+    }
+
+    return {
+      employeeName: state.employeeName || '',
+      role: ROLE_LABEL,
+      startDate: state.startDate || '',
+      dayProgressText: dayProgressText,
+      verdictText: VERDICT_LABEL[state.finalVerdict || ''] || '',
+      commentsText: commentsParts.join(' | '),
+    };
+  }
+
   let saveTimer = null;
   function save(){
     const hint = document.getElementById('saveHint');
@@ -659,7 +695,7 @@
         const valueStr = JSON.stringify(state);
         await storageSet_(STORAGE_KEY, valueStr);
         if(state.employeeName){
-          await remoteSave_(remoteKeyFor_(state.employeeName), valueStr);
+          await remoteSave_(remoteKeyFor_(state.employeeName), valueStr, buildMeta_());
         }
         if(hint) hint.textContent = SYNC_URL && state.employeeName ? 'сохранено и синхронизировано ✓' : 'сохранено локально ✓';
       }catch(e){
