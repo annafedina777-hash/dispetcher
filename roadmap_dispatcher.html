@@ -534,7 +534,10 @@
     const nameInp = document.getElementById('employeeName');
     nameInp.value = state.employeeName;
     nameInp.addEventListener('input', ()=>{ state.employeeName = nameInp.value; save(); });
-    nameInp.addEventListener('blur', ()=>{ pullRemoteForCurrentName_(); });
+    nameInp.addEventListener('blur', ()=>{
+      const n = nameInp.value.trim();
+      if(n && n !== loadedForName){ loadForName_(n); }
+    });
 
     const dateInp = document.getElementById('startDate');
     dateInp.value = state.startDate;
@@ -561,15 +564,22 @@
     document.getElementById('resetBtn').addEventListener('click', async ()=>{
       if(!confirm('Сбросить весь прогресс по дорожной карте?')) return;
       const prevName = state.employeeName;
-      state = {employeeName:'', startDate:'', tasks:{}, notes:{}, assess:{}, assessComment:{}, finalVerdict:'', finalComment:'', finalDate:''};
-      try{ await storageDelete_(STORAGE_KEY); }catch(e){}
+      state = Object.assign({}, BLANK_STATE);
+      try{ await storageDelete_(localKeyFor_(prevName)); }catch(e){}
+      try{ await storageDelete_(HINT_KEY); }catch(e){}
       if(SYNC_URL && prevName){ try{ await remoteDelete_(remoteKeyFor_(prevName)); }catch(e){} }
+      loadedForName = '';
       document.getElementById('finalDateShown').innerHTML = '<b>—</b>Дата заключения';
       render();
       bindHeader();
     });
   }
 
+  // ---------- cross-device sync (optional) ----------
+  // Заполните SYNC_URL адресом веб-приложения Google Apps Script
+  // (см. файл Хранилище_прогресса_Google_Apps_Script.gs), чтобы прогресс
+  // сохранялся в Google-таблице и был виден с любого устройства/браузера.
+  // Пока строка пустая — работает только локальное хранилище браузера.
   const SYNC_URL = 'https://script.google.com/macros/s/AKfycbwJyREa5CQr-PIbvvGrNuSWTodDqyifdF8WeIY1-C3KpDx8w5F9QvpeQkLQvN_9B6EXKw/exec';
 
   function slug_(s){
@@ -606,20 +616,6 @@
       });
     }catch(e){}
   }
-  async function pullRemoteForCurrentName_(){
-    if(!SYNC_URL || !state.employeeName) return;
-    const hint = document.getElementById('saveHint');
-    const remoteValue = await remoteLoad_(remoteKeyFor_(state.employeeName));
-    if(remoteValue){
-      try{
-        const parsed = JSON.parse(remoteValue);
-        state = Object.assign(state, parsed, { employeeName: state.employeeName });
-        render();
-        bindHeader();
-        if(hint) hint.textContent = 'прогресс подтянут с сервера ✓';
-      }catch(e){}
-    }
-  }
 
   // ---------- storage: uses window.storage inside Claude.ai, falls back to
   // localStorage when the page is opened as a normal webpage (GitHub Pages,
@@ -649,6 +645,19 @@
     localStorage.removeItem(key);
     return true;
   }
+
+  // Локальное хранилище теперь тоже привязано к конкретному имени, а не к
+  // устройству целиком — иначе на общем компьютере/браузере два разных
+  // стажёра видели бы прогресс друг друга. HINT_KEY хранит только «чьё имя
+  // вводили последним на этом устройстве», чтобы удобно предзаполнять поле —
+  // сами данные (задачи, оценки) всегда лежат под ключом конкретного имени.
+  const HINT_KEY = STORAGE_KEY + '::__lastname__';
+  const ANON_KEY = STORAGE_KEY + '::__anon__';
+  function localKeyFor_(name){
+    return name ? (STORAGE_KEY + '::' + slug_(name)) : ANON_KEY;
+  }
+
+  let loadedForName = '';
 
   const ROLE_LABEL = 'Логист-диспетчер';
   const VERDICT_LABEL = { ok:'Соответствует должности', partial:'Соответствует условно', no:'Не соответствует', '':'—' };
@@ -693,8 +702,9 @@
     saveTimer = setTimeout(async ()=>{
       try{
         const valueStr = JSON.stringify(state);
-        await storageSet_(STORAGE_KEY, valueStr);
+        await storageSet_(localKeyFor_(state.employeeName), valueStr);
         if(state.employeeName){
+          await storageSet_(HINT_KEY, state.employeeName);
           await remoteSave_(remoteKeyFor_(state.employeeName), valueStr, buildMeta_());
         }
         if(hint) hint.textContent = SYNC_URL && state.employeeName ? 'сохранено и синхронизировано ✓' : 'сохранено локально ✓';
@@ -704,18 +714,55 @@
     }, 300);
   }
 
-  async function load(){
+  const BLANK_STATE = { employeeName:'', startDate:'', tasks:{}, notes:{}, assess:{}, assessComment:{}, finalVerdict:'', finalComment:'', finalDate:'' };
+
+  // Загружает данные конкретного человека (по имени): сначала локальный
+  // кэш этого имени на этом устройстве, затем — свежую версию с сервера
+  // (если она новее/доступна, она перекрывает локальную). Если ни там,
+  // ни там ничего нет — показывает чистую карту под этим именем.
+  async function loadForName_(name){
+    let found = false;
+    state = Object.assign({}, BLANK_STATE, { employeeName: name });
+
     try{
-      const res = await storageGet_(STORAGE_KEY);
+      const res = await storageGet_(localKeyFor_(name));
       if(res && res.value){
         const parsed = JSON.parse(res.value);
-        state = Object.assign(state, parsed);
+        state = Object.assign(state, parsed, { employeeName: name });
+        found = true;
       }
-    }catch(e){ /* no saved state yet, or storage unavailable */ }
+    }catch(e){}
+
+    if(SYNC_URL){
+      const remoteValue = await remoteLoad_(remoteKeyFor_(name));
+      if(remoteValue){
+        try{
+          const parsed = JSON.parse(remoteValue);
+          state = Object.assign(state, parsed, { employeeName: name });
+          found = true;
+        }catch(e){}
+      }
+    }
+
+    loadedForName = name;
     render();
     bindHeader();
-    if(SYNC_URL && state.employeeName){
-      await pullRemoteForCurrentName_();
+    const hint = document.getElementById('saveHint');
+    if(hint) hint.textContent = found ? 'прогресс загружен ✓' : 'новая карта для этого имени';
+  }
+
+  async function load(){
+    let hintName = '';
+    try{
+      const res = await storageGet_(HINT_KEY);
+      if(res && res.value) hintName = res.value;
+    }catch(e){}
+
+    if(hintName){
+      await loadForName_(hintName);
+    }else{
+      render();
+      bindHeader();
     }
   }
 
